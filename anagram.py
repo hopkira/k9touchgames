@@ -37,12 +37,17 @@ def draw_word(word:str, size:int, line:int) -> list:
         text_rect = text.get_rect(center = (width/2 + ((num-2.5) * (size * 1.1)), line * size * 1.1))
         # pygame.draw.rect(screen, RED, text_rect, 0)
         rect  = (((width/2) -size/2 + ((num-2.5) * size * 1.1)), -size/2 + line * size * 1.1, size, size)
-        rects.append(rect)
         pygame.draw.rect(screen, WHITE, rect, width=3, border_radius=7)
-        screen.blit(text,  text_rect)
+        rect = tuple(letter) + rect
+        rects.append(rect)
+        screen.blit(text, text_rect)
     return rects
- 
+
+touch_spots = []
+touch_spots = touch_spots + draw_word("WORDLE", 150, 1)
+touch_spots  = touch_spots + draw_word("INPUT_", 150, 2)
 # -------- Main Program Loop -----------
+
 while carryOn:
     # --- Main event loop
     for event in pygame.event.get(): # User did something
@@ -50,6 +55,7 @@ while carryOn:
             carryOn = False # Flag that we are done so we can exit the while loop
         if event.type == pygame.MOUSEBUTTONDOWN:
             if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40:
+                print(touch_spots)
                 pygame.quit()
  
      # --- Game logic should go here
@@ -63,14 +69,10 @@ while carryOn:
     #pygame.draw.ellipse(screen, BLACK, [20,20,250,100], 2)
     if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40:
         pygame.draw.rect(screen,color_light,[width/2,height/2,140,40])
-          
     else:
         pygame.draw.rect(screen,color_dark,[width/2,height/2,140,40])
-
     draw_word("WORDLE", 150, 1)
     draw_word("INPUT_", 150, 2)
-    # Corbel
-
 
     # --- Go ahead and update the screen with what we've drawn.
     #pygame.display.flip(
@@ -80,4 +82,5 @@ while carryOn:
     clock.tick(60)
  
 #Once we have exited the main program loop we can stop the game engine:
+print(touch_spots)
 pygame.quit()
