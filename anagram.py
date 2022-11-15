@@ -36,7 +36,7 @@ clock = pygame.time.Clock()
 def draw_letter(letter:str, size:int, row:int, col:int, colour:tuple) -> list:
     letterfont = pygame.font.SysFont('Corbel',size)
     # for num,letter in enumerate(word):
-    text = letterfont.render(letter,True,BR_GREEN)
+    text = letterfont.render(letter,True,DARK_GREEN)
     text_rect = text.get_rect(center = (width/2 + ((col-2.5) * (size * 1.1)), row * size * 1.1))
     # pygame.draw.rect(screen, RED, text_rect, 0)
     rect  = (int((width/2) -size/2 + ((col-2.5) * size * 1.1)), int(-size/2 + row * size * 1.1), size, size)
@@ -57,8 +57,8 @@ def touch_spot(touch_spots) -> str:
     for num,spots in enumerate(touch_spots):
         letter,left,top,box_width,box_height = touch_spots[num]
         if left <= mouse[0] <= left + box_width and top <= mouse[1] <= top + box_height:
-            pygame.draw.rect(screen,GREEN,[left, top, box_width, box_height], width=5,border_radius=7)
-            letterfont = pygame.font.SysFont('Corbel',int(size*1.1))
+            pygame.draw.rect(screen,DARK_GREEN,[left, top, box_width, box_height], width=5,border_radius=7)
+            letterfont = pygame.font.SysFont('Corbel',int(size))
             # for num,letter in enumerate(word):
             text = letterfont.render(letter,True,GREEN)
             text_rect = text.get_rect(center = ( left + box_width/2, top + box_height/2  ))
@@ -96,8 +96,8 @@ while carryOn:
     #    pygame.draw.rect(screen,colour_light,[width/2,height/2,140,40])
     #else:
     #    pygame.draw.rect(screen,colour_dark,[width/2,height/2,140,40])
-    draw_word("WORDLE", 150, 2, 0, DARK_GREEN)
-    draw_word("INPUT_", 150, 3, 0, DARK_GREEN)
+    draw_word("WORDLE", 150, 2, 0, BR_GREEN)
+    draw_word("INPUT_", 150, 3, 0, BR_GREEN)
     draw_word("PASS", 150, 4, 1, RED)
 
     touch_spot(touch_spots)
