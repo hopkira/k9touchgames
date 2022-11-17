@@ -13,12 +13,9 @@ BR_GREEN = (0, 66, 37)
 RED = ( 255, 0, 0)
 YELLOW  = (255,255,0)
 
-# light shade of the button
-colour_light = (170,170,170)
-  
-# dark shade of the button
-colour_dark = (100,100,100)
-
+#width = 1920
+#height = 1080
+#win_size = width, height
 #screen = pygame.display.set_mode(win_size)
 #screen = pygame.display.set_mode((win_size), pygame.FULLSCREEN)
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -47,7 +44,9 @@ class Letter():
         self.colour = colour
         self.rect  = (int((width/2) -size/2 + ((col-2.5) * size * 1.1)), int(-size/2 + row * size * 1.1), size, size)
 
-    def draw(self, colour: tuple):
+    def draw(self, colour: tuple, letter:str = None):
+        if letter:
+            self.letter = letter
         letterfont = pygame.font.SysFont('Corbel',size)
         text = letterfont.render(self.letter,True, colour)
         text_rect = text.get_rect(center = (width/2 + ((self.col-2.5) * (self.size * 1.1)), self.row * self.size * 1.1))
@@ -57,10 +56,9 @@ class Letter():
     def is_touched(self) -> bool:
         left,top,box_width,box_height = self.rect
         if left <= mouse[0] <= left + box_width and top <= mouse[1] <= top + box_height:
-            self.draw(colour = GREEN)
+            self.draw(colour = BR_GREEN)
             return True
         else:
-            self.draw(colour = self.colour)
             return False
 
 
@@ -75,13 +73,12 @@ class Word():
         self.col = col
         self.colour = colour
 
-    def draw(self) -> list:
-        word_list = []
+    def draw(self):
+        self.word_list = []
         for col,letter in enumerate(list(self.word)):
             new_letter = Letter(letter, self.size, self.row, self.col + col, self.colour)
             new_letter.draw(self.colour)
-            word_list.append(new_letter)
-        return word_list
+            self.word_list.append(new_letter)
 
 
 class Timer():
@@ -117,32 +114,38 @@ class Timer():
 
 
 # Draw board 
-screen.fill(BLACK)
+# screen.fill(BLACK)
+# bg = pygame.image.load("gallifreyan.png")
 
 score_line = Word("000000",150,1,0,BR_GREEN)
 anagram_line = Word("      ", 150, 2, 0, DARK_GREEN)
 input_line = Word("MASTER", 150, 3, 0, GREEN)
-lives_line = Word("LIVES3", 150, 4, 0, DARK_GREEN)
+lives_line = Word("PASS 3", 150, 4, 0, DARK_GREEN)
 lines  = []
 
-score_word = score_line.draw()
-anagram_word = anagram_line.draw()
-input_word = input_line.draw()
-livess_word = lives_line.draw()
+score_line.draw()
+anagram_line.draw()
+input_line.draw()
+lives_line.draw()
 
 timer = Timer()
 
-# -------- Main Program Loop -----------
 time = 1
+letter_num = 0
+
+# screen.blit(bg, (0, 0))
+
+# -------- Main Program Loop -----------
 while carryOn:
     # --- Main event loop
     for event in pygame.event.get(): # User did something
         if event.type == pygame.QUIT: # If user clicked close
             carryOn = False # Flag that we are done so we can exit the while loop
         if event.type == pygame.MOUSEBUTTONDOWN:
-            for letter in input_word:
+            for letter in input_line.word_list:
                 if letter.is_touched():
-                    letter.draw(YELLOW)
+                    anagram_line.word_list[letter_num].draw(YELLOW,letter.letter)
+                    letter_num += 1
                     print(letter.letter)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
